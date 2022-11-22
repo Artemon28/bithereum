@@ -1,6 +1,8 @@
 package com.example.demo.services;
 
 import com.example.demo.Entities.User;
+import com.example.demo.Entities.UserApi;
+import com.example.demo.repositories.UserApiRepository;
 import com.example.demo.repositories.UserInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,24 +11,25 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class ApiService {
 
     @Autowired
-    private UserInfoRepository repository;
+    private UserApiRepository repository;
 
-    public void addUser(User user) {
-        repository.save(user);
+    public void addApi(UserApi api) {
+        repository.save(api);
     }
 
-    public void deleteUser(long id) {
+    public void deleteApi(long id) {
         repository.deleteById(id);
     }
 
-    public Optional<User> findUser(long id) {
-        return repository.findById(id);
+    public Optional<UserApi> findApiByUserId(long id) {
+        return repository.findByUserId(id);
     }
 
-    public List<User> findAll() {
+    public List<UserApi> findAll() {
         return repository.findAll();
     }
+
 }
