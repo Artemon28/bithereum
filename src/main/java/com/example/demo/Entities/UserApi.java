@@ -15,6 +15,9 @@ public class UserApi {
     @Column(name = "binance_key")
     private String binanceKey;
 
+    @Column(name = "binance_secret_key")
+    private String binanceSecretKey;
+
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
@@ -27,5 +30,16 @@ public class UserApi {
 
     public void setBinanceKey(String binanceKey) {
         this.binanceKey = binanceKey;
+    }
+    public void setBinanceSecretKey(String binanceSecretKey) {
+        this.binanceSecretKey = binanceSecretKey;
+    }
+
+    public String getBinanceKey() {
+        return binanceKey;
+    }
+
+    public String getBinanceSecretKey() {
+        return binanceSecretKey;
     }
 }
