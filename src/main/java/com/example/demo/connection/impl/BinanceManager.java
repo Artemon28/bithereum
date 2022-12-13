@@ -16,16 +16,16 @@ public class BinanceManager implements CryptoManager {
     @Autowired
     private ApiService service;
 
-
     @Override
-    public void getSpotInfo(int id) throws Exception {
+    public String getSpotInfo(int id) throws Exception {
         Optional<UserApi> api = service.findApiByUserId(id);
         if (api.isPresent()) {
             BinanceSnapshotAccountRequest request = new BinanceSnapshotAccountRequest(
                     api.get().getBinanceSecretKey(), api.get().getBinanceKey());
             BinanceResponse response = request.send();
-            System.out.println(response.getJsonString());
+            return response.getJsonString();
         }
+        return null;
     }
 
     @Override
