@@ -7,6 +7,8 @@ import com.example.demo.binance.BinanceTime;
 import com.example.demo.connection.impl.BinanceManager;
 import com.example.demo.services.ApiService;
 import com.example.demo.services.UserService;
+import javafx.application.Application;
+import javafx.stage.Stage;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -26,7 +28,7 @@ import static java.util.stream.Collectors.joining;
 
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = "com.example.demo.repositories")
-public class DemoApplication {
+public class DemoApplication extends Application {
 
     @Autowired
     private UserService service;
@@ -39,8 +41,8 @@ public class DemoApplication {
 
 
     public static void main(String[] args) throws Exception {
-
         SpringApplication.run(DemoApplication.class, args);
+        Application.launch(args);
     }
 
     @PostConstruct
@@ -57,4 +59,8 @@ public class DemoApplication {
         apiService.addApi(api);*/
     }
 
+    @Override
+    public void start(Stage stage) throws Exception {
+        stage.show();
+    }
 }
