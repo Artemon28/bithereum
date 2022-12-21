@@ -1,10 +1,15 @@
 package com.example.demo.repositories;
 
-
 import com.example.demo.Entities.User;
-import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 
-public interface UserInfoRepository extends JpaRepository<User, Long> {
-    // some our methods
+public interface UserInfoRepository {
+    User findByUserId(long id);
+
+    public void save(User id);
+
+    public void deleteById(long id);
+
+    public List<User> findAll();
 }

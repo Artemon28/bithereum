@@ -1,30 +1,20 @@
 package com.example.demo.Entities;
 
-
-import javax.persistence.*;
-
-@Entity
-@Table(name = "users_info")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "login")
     private String login;
 
-    @Column(name = "password")
     private String password;
 
-    @Column(name = "nickname")
     private String nickname;
 
-    @OneToOne(mappedBy = "user")
     private UserApi api;
 
     public User() {}
 
-    public User(String login, byte[] password, String nickname) {
+    public User(Long id, String login, byte[] password, String nickname) {
+        this.id = id;
         this.login = login;
         this.password = new String(password);
         this.nickname = nickname;
@@ -32,5 +22,17 @@ public class User {
 
     public String getNickname() {
         return nickname;
+    }
+    public String getLogin() {
+        return login;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public Long getId() {
+        if (id == null){
+            return 0L;
+        }
+        return id;
     }
 }

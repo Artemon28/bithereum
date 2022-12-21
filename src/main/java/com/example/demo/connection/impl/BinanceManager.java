@@ -5,27 +5,33 @@ import com.example.demo.binance.BinanceResponse;
 import com.example.demo.binance.BinanceSnapshotAccountRequest;
 import com.example.demo.connection.api.CryptoManager;
 import com.example.demo.services.ApiService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
-@Component
 public class BinanceManager implements CryptoManager {
-
-    @Autowired
-    private ApiService service;
+    private final ApiService service;
+    public BinanceManager(ApiService service){
+        this.service = service;
+    }
 
     @Override
     public String getSpotInfo(int id) throws Exception {
-        Optional<UserApi> api = service.findApiByUserId(id);
-        if (api.isPresent()) {
+        UserApi api = service.findApiByUserId(id);
+        if (api != null) {
             BinanceSnapshotAccountRequest request = new BinanceSnapshotAccountRequest(
-                    api.get().getBinanceSecretKey(), api.get().getBinanceKey());
+                    api.getBinanceSecretKey(), api.getBinanceKey());
             BinanceResponse response = request.send();
             return response.getJsonString();
         }
         return null;
+    }
+
+    @Override
+    public boolean isUserExist(String key, String secretKey) throws Exception {
+        BinanceSnapshotAccountRequest request = new BinanceSnapshotAccountRequest(secretKey, key);
+        BinanceResponse response = request.send();
+        if (response.getResponseCode() != 200){
+            return false;
+        }
+        return true;
     }
 
     @Override

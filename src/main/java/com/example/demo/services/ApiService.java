@@ -13,7 +13,9 @@ import java.util.Optional;
 @Service
 public class ApiService {
 
-    @Autowired
+    public ApiService(UserApiRepository repository){
+        this.repository = repository;
+    }
     private UserApiRepository repository;
 
     public void addApi(UserApi api) {
@@ -24,7 +26,7 @@ public class ApiService {
         repository.deleteById(id);
     }
 
-    public Optional<UserApi> findApiByUserId(long id) {
+    public UserApi findApiByUserId(long id) {
         return repository.findByUserId(id);
     }
 
