@@ -20,12 +20,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import org.springframework.context.ConfigurableApplicationContext;
 import java.io.IOException;
 
 public class DemoApplication extends Application {
 
-    protected ConfigurableApplicationContext springContext;
 
     private UserService service;
 
@@ -44,7 +42,7 @@ public class DemoApplication extends Application {
     }
 
     public static String getBalance(int id) throws Exception {
-        return manager.getSpotInfo(id);
+        return manager.getFuturesInfo(id);
     }
 
     public static UserApi getUser(int id) throws Exception {

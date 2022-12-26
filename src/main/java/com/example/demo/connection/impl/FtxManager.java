@@ -14,6 +14,17 @@ public class FtxManager implements CryptoManager {
     public String getSpotInfo(int userId) throws Exception {
         return null;
     }
+
+    @Override
+    public String getMarginInfo(int userId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public String getFuturesInfo(int userId) throws Exception {
+        return null;
+    }
+
     @Override
     public boolean isUserExist(String key, String secretKey) throws Exception {
         return false;

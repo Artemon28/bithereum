@@ -18,7 +18,31 @@ public class BinanceManager implements CryptoManager {
         if (api != null) {
             BinanceSnapshotAccountRequest request = new BinanceSnapshotAccountRequest(
                     api.getBinanceSecretKey(), api.getBinanceKey());
-            BinanceResponse response = request.send();
+            BinanceResponse response = request.sendSpot();
+            return response.getJsonString();
+        }
+        return null;
+    }
+
+    @Override
+    public String getMarginInfo(int id) throws Exception {
+        UserApi api = service.findApiByUserId(id);
+        if (api != null) {
+            BinanceSnapshotAccountRequest request = new BinanceSnapshotAccountRequest(
+                    api.getBinanceSecretKey(), api.getBinanceKey());
+            BinanceResponse response = request.sendMargin();
+            return response.getJsonString();
+        }
+        return null;
+    }
+
+    @Override
+    public String getFuturesInfo(int id) throws Exception {
+        UserApi api = service.findApiByUserId(id);
+        if (api != null) {
+            BinanceSnapshotAccountRequest request = new BinanceSnapshotAccountRequest(
+                    api.getBinanceSecretKey(), api.getBinanceKey());
+            BinanceResponse response = request.sendFutures();
             return response.getJsonString();
         }
         return null;
@@ -27,7 +51,7 @@ public class BinanceManager implements CryptoManager {
     @Override
     public boolean isUserExist(String key, String secretKey) throws Exception {
         BinanceSnapshotAccountRequest request = new BinanceSnapshotAccountRequest(secretKey, key);
-        BinanceResponse response = request.send();
+        BinanceResponse response = request.sendSpot();
         if (response.getResponseCode() != 200){
             return false;
         }

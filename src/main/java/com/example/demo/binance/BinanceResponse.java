@@ -36,6 +36,7 @@ public class BinanceResponse {
         return balances;
     }
 
+
     public String getJsonString() {
         return jsonString;
     }

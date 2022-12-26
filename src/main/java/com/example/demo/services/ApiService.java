@@ -4,13 +4,10 @@ import com.example.demo.Entities.User;
 import com.example.demo.Entities.UserApi;
 import com.example.demo.repositories.UserApiRepository;
 import com.example.demo.repositories.UserInfoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
 public class ApiService {
 
     public ApiService(UserApiRepository repository){
