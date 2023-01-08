@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
 
 public class SecondaryController {
@@ -52,10 +53,13 @@ public class SecondaryController {
         Pane registerPane = (Pane) loader.load();
         authPane.getChildren().clear();
         authPane.getChildren().add(registerPane);
-        String balance = null;
+        StringBuilder balance = new StringBuilder("Your top currencies is\n");
         Label lblData = (Label) authPane.lookup("#balanceLabel");
         try {
-            balance = DemoApplication.getBalance(id);
+            Map<String, String> currencies = DemoApplication.getBalance(id);
+            for (Map.Entry<String, String> entry : currencies.entrySet()) {
+                balance.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+            }
         } catch (Exception e) {
             lblData.setText("Error to connect and get balance");
             return;

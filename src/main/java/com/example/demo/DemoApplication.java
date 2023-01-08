@@ -21,6 +21,9 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class DemoApplication extends Application {
 
@@ -38,11 +41,13 @@ public class DemoApplication extends Application {
         dbApi.createNewDatabase();
         apiService = new ApiService(dbApi);
         manager = new BinanceManager(apiService);
+//        makeOrder();
+//        getAllOrders();
         Application.launch(args);
     }
 
-    public static String getBalance(int id) throws Exception {
-        return manager.getFuturesInfo(id);
+    public static Map<String, String> getBalance(int id) throws Exception {
+        return manager.getSpotInfo(id);
     }
 
     public static UserApi getUser(int id) throws Exception {
@@ -51,6 +56,25 @@ public class DemoApplication extends Application {
 
     public static boolean isExist(String key, String secretKey) throws Exception {
         return manager.isUserExist(key, secretKey);
+    }
+
+    public static ArrayList<String> getExchangeInfo() throws Exception {
+//        System.out.println(manager.getExchangeInfo());
+        return manager.getExchangeInfo();
+    }
+
+    public static List<String> getAllOrders(String symbol) throws Exception{
+        UserApi user = apiService.findApiByUserId(1);
+        String key = user.getBinanceKey();
+        String secretKey = user.getBinanceSecretKey();
+        return manager.allOrders(key, secretKey, symbol);
+    }
+
+    public static void makeOrder(String symbol, String orderType, String qty) throws Exception{
+        UserApi user = apiService.findApiByUserId(1);
+        String key = user.getBinanceKey();
+        String secretKey = user.getBinanceSecretKey();
+        manager.makeOrder(key, secretKey, symbol, orderType, "MARKET", qty);
     }
 
     public static void addUser(String key, String secretKey){
@@ -64,7 +88,7 @@ public class DemoApplication extends Application {
     private Scene scene;
 
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 640, 480);
+        scene = new Scene(loadFXML("primary"));
         stage.setScene(scene);
         stage.show();
     }
