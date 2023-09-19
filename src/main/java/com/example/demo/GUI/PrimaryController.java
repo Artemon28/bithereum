@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -26,7 +27,7 @@ public class PrimaryController {
     TextField username;
 
     @FXML
-    AnchorPane binBalance;
+    VBox binBalance;
 
     @FXML
     public void exitBinUser(ActionEvent event) throws Exception {

@@ -19,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -88,8 +89,10 @@ public class DemoApplication extends Application {
     private Scene scene;
 
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"));
+        Parent parent = loadFXML("primary");
+        scene = new Scene(parent);
         stage.setScene(scene);
+        stage.initStyle(StageStyle.UNDECORATED);
         stage.show();
     }
 

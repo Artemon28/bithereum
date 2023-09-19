@@ -11,6 +11,7 @@ import java.util.List;
 
 public class UserApiRepositoryImpl implements  UserApiRepository{
     private final String fileName;
+    private final DataEncrypter dataEncrypter = new DataEncrypter();
 
     public UserApiRepositoryImpl(String fileName){
         this.fileName = fileName;
@@ -55,8 +56,10 @@ public class UserApiRepositoryImpl implements  UserApiRepository{
             if (rs.getLong("id") == 0){
                 return null;
             }
-            return new UserApi(rs.getLong("id"), rs.getString("binance_key"),
-                    rs.getString("binance_secret_key"), user);
+            String decryptedApiKey = dataEncrypter.decryptData(rs.getString("binance_key"));
+            String decryptedSecretApiKey = dataEncrypter.decryptData(rs.getString("binance_secret_key"));
+            return new UserApi(rs.getLong("id"), decryptedApiKey,
+                    decryptedSecretApiKey, user);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -69,15 +72,20 @@ public class UserApiRepositoryImpl implements  UserApiRepository{
 
         String url = getConnectionString(fileName);
         try (Connection conn = DriverManager.getConnection(url); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            String encryptedBinanceKey = dataEncrypter.encryptData(user.getBinanceKey());
+            String encryptedBinanceSecretKey = dataEncrypter.encryptData(user.getBinanceSecretKey());
+
             pstmt.setLong(1, user.getId());
-            pstmt.setString(2, user.getBinanceKey());
-            pstmt.setString(3, user.getBinanceSecretKey());
+            pstmt.setString(2, encryptedBinanceKey);
+            pstmt.setString(3, encryptedBinanceSecretKey);
             pstmt.setLong(4, user.getUserId());
             user.setId(pstmt.executeUpdate());
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
+
 
     @Override
     public void deleteById(long id) {
