@@ -19,12 +19,9 @@ public class BitMexTime {
                 .url(build.build())
                 .build();
         ResponseBody time = client.newCall(req1).execute().body();
-        System.out.println( "ASdfddasdasdasdasd");
-        System.out.println( time.string() );
-        System.out.println("asdadsadsasdasdadsadsasdadsasd");
         Gson gson = new Gson();
-        System.out.println("time: " + time.string());
-        return gson.fromJson(time.string(), BitMexTimeResponse.class);
+        BitMexTimeResponse tmp = gson.fromJson(time.string(), BitMexTimeResponse.class);
+        return tmp;
     }
 }
 

@@ -1,9 +1,11 @@
 package com.example.demo.connection.api;
 
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+@Component
 public interface CryptoManager {
     Map<String, String> getSpotInfo(int userId) throws Exception;
     String getMarginInfo(int userId) throws Exception;

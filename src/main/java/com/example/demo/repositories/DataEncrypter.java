@@ -1,12 +1,13 @@
 package com.example.demo.repositories;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Security;
 
-
+@Component
 public class DataEncrypter {
 
     private static String phrase = "Bella ciao, Bella ciao!";

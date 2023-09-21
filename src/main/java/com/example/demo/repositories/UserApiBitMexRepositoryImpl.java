@@ -2,6 +2,7 @@ package com.example.demo.repositories;
 
 
 import com.example.demo.Entities.User;
+import com.example.demo.Entities.UserApi;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -9,14 +10,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 @Component
-public class UserInfoRepositoryImpl implements UserInfoRepository{
-    private String fileName;
+public class UserApiBitMexRepositoryImpl implements UserApiRepository{
+    private final String fileName = "test.db";
+    private final DataEncrypter dataEncrypter = new DataEncrypter();
 
-    public UserInfoRepositoryImpl( ){
+    public UserApiBitMexRepositoryImpl() {
 
-    }
-    public UserInfoRepositoryImpl(String fileName){
-        this.fileName = fileName;
     }
 
     public void createNewDatabase() {
@@ -24,21 +23,20 @@ public class UserInfoRepositoryImpl implements UserInfoRepository{
         try (Connection conn = DriverManager.getConnection(url)) {
             if (conn != null) {
                 DatabaseMetaData meta = conn.getMetaData();
-                createUsersInfo();
+                createUsersApi();
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    private void createUsersInfo() {
+    private void createUsersApi() {
         String url = getConnectionString(fileName);
-
-        String sql = "CREATE TABLE IF NOT EXISTS users_info (\n" +
-                "id bigserial constraint users_info_pk primary key,\n" +
-                "login    varchar(255) not null,\n" +
-                "password varchar(255) not null,\n" +
-                "nickname varchar(255) not null);";
+        String sql = "CREATE TABLE IF NOT EXISTS users_api_bitmex (\n" +
+                "user_id bigint not null constraint users_api_bitmex_users_info__fk references users_info,\n" +
+                "bitmex_key varchar(255),\n" +
+                "id bigserial constraint users_api_pk primary key,\n" +
+                "bitmex_secret_key varchar(255) not null);";
         try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
@@ -46,18 +44,23 @@ public class UserInfoRepositoryImpl implements UserInfoRepository{
         }
     }
 
-
     @Override
-    public User findByUserId(long id) {
+    public UserApi findByUserId(long id) {
         String url = getConnectionString(fileName);
 
-        String sql = "SELECT login, password, nickname FROM users_info WHERE id = ?";
+        String sql = "SELECT id, bitmex_key, bitmex_secret_key, user_id FROM users_api_bitmex WHERE id = ?";
         try (Connection conn = DriverManager.getConnection(url); PreparedStatement pstmt  = conn.prepareStatement(sql)) {
-
             pstmt.setInt(1, (int)id);
             ResultSet rs  = pstmt.executeQuery();
-            return new User(rs.getLong("id"), rs.getString("login"), rs.getBytes("password"), rs.getString("nickname"));
-
+            UserInfoRepositoryImpl u = new UserInfoRepositoryImpl(fileName);
+            User user = u.findByUserId(rs.getLong("user_id"));
+            if (rs.getLong("id") == 0){
+                return null;
+            }
+            String decryptedApiKey = dataEncrypter.decryptData(rs.getString("bitmex_key"));
+            String decryptedSecretApiKey = dataEncrypter.decryptData(rs.getString("bitmex_secret_key"));
+            return new UserApi(rs.getLong("id"), decryptedApiKey,
+                    decryptedSecretApiKey, user);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -65,23 +68,30 @@ public class UserInfoRepositoryImpl implements UserInfoRepository{
     }
 
     @Override
-    public void save(User user) {
-        String sql = "INSERT INTO users_info(login, password, nickname) VALUES(?,?,?)";
+    public void save(UserApi user) {
+        String sql = "INSERT INTO users_api_bitmex(id, bitmex_key, bitmex_secret_key, user_id) VALUES(?,?,?,?)";
 
         String url = getConnectionString(fileName);
         try (Connection conn = DriverManager.getConnection(url); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, user.getLogin());
-            pstmt.setString(2, user.getPassword());
-            pstmt.setString(3, user.getNickname());
-            pstmt.executeUpdate();
+
+            String encryptedBitmexKey = dataEncrypter.encryptData(user.getKey());
+            String encryptedBitmexSecretKey = dataEncrypter.encryptData(user.getSecretKey());
+
+            pstmt.setLong(1, user.getId());
+            pstmt.setString(2, encryptedBitmexKey);
+            pstmt.setString(3, encryptedBitmexSecretKey);
+            pstmt.setLong(4, user.getUserId());
+            int idd = pstmt.executeUpdate();
+            user.setId(idd);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
+
     @Override
     public void deleteById(long id) {
-        String sql = "DELETE FROM users_info WHERE id = ?";
+        String sql = "DELETE FROM users_api_bitmex WHERE id = ?";
 
         String url = getConnectionString(fileName);
         try (Connection conn = DriverManager.getConnection(url); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -93,16 +103,19 @@ public class UserInfoRepositoryImpl implements UserInfoRepository{
     }
 
     @Override
-    public List<User> findAll() {
+    public List<UserApi> findAll() {
         String url = getConnectionString(fileName);
 
-        List<User> allUsers = new ArrayList<>();
-        String sql = "SELECT login, password, nickname FROM users_info";
+        List<UserApi> allUsers = new ArrayList<>();
+        String sql = "SELECT id, name, capacity FROM users_info";
         try (Connection conn = DriverManager.getConnection(url);
              Statement stmt  = conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                allUsers.add(new User(rs.getLong("id"), rs.getString("login"), rs.getBytes("password"), rs.getString("nickname")));
+                UserInfoRepositoryImpl u = new UserInfoRepositoryImpl(fileName);
+                User user = u.findByUserId(rs.getLong("user_id"));
+                allUsers.add(new UserApi(rs.getLong("id"), rs.getString("binance_key"),
+                        rs.getString("binance_secret_key"), user));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());

@@ -3,16 +3,20 @@ package com.example.demo.connection.impl;
 import com.example.demo.Entities.UserApi;
 import com.example.demo.binance.*;
 import com.example.demo.connection.api.CryptoManager;
-import com.example.demo.services.ApiService;
+import com.example.demo.services.BinanceApiService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class BinanceManager implements CryptoManager {
-    private final ApiService service;
-    public BinanceManager(ApiService service){
-        this.service = service;
+    @Autowired
+    private BinanceApiService service;
+    public BinanceManager( ){
+
     }
 
     @Override

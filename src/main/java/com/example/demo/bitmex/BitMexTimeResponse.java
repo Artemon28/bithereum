@@ -3,15 +3,15 @@ package com.example.demo.bitmex;
 public class BitMexTimeResponse {
     private final String name;
     private final String version;
-    private final String timeStamp;
+    private final String timestamp;
 
-    public BitMexTimeResponse(String name, String version, String timeStamp) {
+    public BitMexTimeResponse(String name, String version, String timestamp) {
         this.name = name;
         this.version = version;
-        this.timeStamp = timeStamp;
+        this.timestamp = timestamp;
     }
 
     public String getTimeStamp() {
-        return timeStamp;
+        return timestamp;
     }
 }

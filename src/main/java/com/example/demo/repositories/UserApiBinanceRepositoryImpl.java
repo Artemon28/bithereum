@@ -3,18 +3,18 @@ package com.example.demo.repositories;
 
 import com.example.demo.Entities.User;
 import com.example.demo.Entities.UserApi;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
-public class UserApiRepositoryImpl implements  UserApiRepository{
-    private final String fileName;
+@Component
+public class UserApiBinanceRepositoryImpl implements UserApiRepository{
+    private final String fileName = "test.db";
     private final DataEncrypter dataEncrypter = new DataEncrypter();
 
-    public UserApiRepositoryImpl(String fileName){
-        this.fileName = fileName;
+    public UserApiBinanceRepositoryImpl( ) {
     }
 
     public void createNewDatabase() {

@@ -3,13 +3,18 @@ package com.example.demo.services;
 import com.example.demo.Entities.User;
 import com.example.demo.repositories.UserApiRepository;
 import com.example.demo.repositories.UserInfoRepository;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
+@Component
 public class UserService {
     private UserInfoRepository repository;
 
+    public UserService(){
+
+    }
     public UserService(UserInfoRepository repository){
         this.repository = repository;
     }

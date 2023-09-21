@@ -1,19 +1,22 @@
 package com.example.demo.services;
 
-import com.example.demo.Entities.User;
 import com.example.demo.Entities.UserApi;
+import com.example.demo.repositories.UserApiBinanceRepositoryImpl;
 import com.example.demo.repositories.UserApiRepository;
-import com.example.demo.repositories.UserInfoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
-public class ApiService {
+@Component
+public class BinanceApiService {
 
-    public ApiService(UserApiRepository repository){
-        this.repository = repository;
+    @Autowired
+    UserApiBinanceRepositoryImpl repository;
+
+    public BinanceApiService(){
+
     }
-    private UserApiRepository repository;
 
     public void addApi(UserApi api) {
         repository.save(api);

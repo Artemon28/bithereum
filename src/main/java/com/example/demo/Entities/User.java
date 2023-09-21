@@ -1,5 +1,7 @@
 package com.example.demo.Entities;
 
+import org.springframework.stereotype.Component;
+
 public class User {
     private Long id;
 
@@ -11,7 +13,9 @@ public class User {
 
     private UserApi api;
 
-    public User() {}
+    public User() {
+
+    }
 
     public User(Long id, String login, byte[] password, String nickname) {
         this.id = id;

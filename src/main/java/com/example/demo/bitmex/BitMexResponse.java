@@ -30,17 +30,20 @@ public class BitMexResponse {
     }
 
     public int getResponseCode() {
-        return (int)obj.get("code");
+        if (obj.has("error")) {
+            return 400;
+        }
+        return 200;
     }
 
     public Map<String, String> getAllBalances() {
         Map<String, String> balances = new TreeMap<>();
-        JSONArray arr = obj.getJSONArray("balances");
-        for (int i = 0; i < arr.length(); i++) {
-            if(!arr.getJSONObject(i).getString("free").equals("0")) {
-                balances.put(arr.getJSONObject(i).getString("asset"), arr.getJSONObject(i).getString("free"));
-            }
-        }
+        balances.put("XBt", this.obj.get("amount").toString());
+//        for (int i = 0; i < arr.length(); i++) {
+//            if(!arr.getJSONObject(i).getString("free").equals("0")) {
+//                balances.put(arr.getJSONObject(i).getString("asset"), arr.getJSONObject(i).getString("free"));
+//            }
+//        }
         return balances;
     }
 

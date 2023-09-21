@@ -3,7 +3,8 @@ package com.example.demo.connection.impl;
 import com.example.demo.binance.BinanceResponse;
 import com.example.demo.binance.BinanceSnapshotMarketRequest;
 import com.example.demo.connection.api.CryptoManager;
-import com.example.demo.services.ApiService;
+import com.example.demo.services.BitmexApiService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +12,10 @@ import java.util.Map;
 
 public class FtxManager implements CryptoManager {
 
-    private final ApiService service;
+    @Autowired
+    private  BitmexApiService service;
 
-    public FtxManager(ApiService service){
-        this.service = service;
-    }
+
     @Override
     public Map<String, String> getSpotInfo(int userId) throws Exception {
         return null;

@@ -5,23 +5,26 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="binBalance" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720" prefWidth="1280" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.GUI.BinanceBalanceController">
-
+<VBox fx:id="bitmexBalance" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720" prefWidth="1280" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.GUI.BitmexBalancePageController">
     <HBox style="-fx-alignment: center">
 
         <ImageView fitHeight="114.0" fitWidth="180.0" layoutX="14.0" layoutY="-19.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@BinanceLogo.png" />
+                <Image url="@Bitmex-Logo-PNG.png" />
             </image>
-         <HBox.margin>
-            <Insets left="20.0" />
-         </HBox.margin>
+            <HBox.margin>
+                <Insets left="20.0" />
+            </HBox.margin>
         </ImageView>
         <Region HBox.hgrow="ALWAYS" />
-      <Button contentDisplay="RIGHT" layoutX="530.0" layoutY="25.0" mnemonicParsing="false" onAction="#logoutBinance" style="-fx-alignment: right" text="Logout">
-         <HBox.margin>
-            <Insets right="30.0" />
-         </HBox.margin></Button>
+        <Button contentDisplay="RIGHT" layoutX="530.0" layoutY="25.0" mnemonicParsing="false" onAction="#logoutBitmex" style="-fx-alignment: right" text="Logout">
+            <HBox.margin>
+                <Insets right="30.0" />
+            </HBox.margin>
+        </Button>
+      <VBox.margin>
+         <Insets top="30.0" />
+      </VBox.margin>
 
     </HBox>
 
@@ -30,7 +33,7 @@
         <VBox spacing="15.0">
             <VBox spacing="10.0">
                 <Label layoutX="26.0" layoutY="114.0" style=" -fx-text-fill: white;" text="Выбрать пару" />
-                <ChoiceBox fx:id="buyWhat" accessibleRole="IMAGE_VIEW" layoutX="25.0" layoutY="131.0" prefHeight="26.0" prefWidth="138.0" />
+                <ChoiceBox fx:id="buyWhatBitmex" accessibleRole="IMAGE_VIEW" layoutX="25.0" layoutY="131.0" prefHeight="26.0" prefWidth="138.0" />
             </VBox>
 
 
@@ -44,22 +47,23 @@
             <HBox spacing="20.0">
                 <Button layoutX="25.0" layoutY="274.0" mnemonicParsing="false" onAction="#makeOrder" text="Сделать заказ" />
                 <Button layoutX="140.0" layoutY="273.0" mnemonicParsing="false" onAction="#getAllOrders" prefHeight="26.0" prefWidth="115.0" text="Прошлые заказы" />
-            <padding>
-               <Insets top="25.0" />
-            </padding>
+                <padding>
+                    <Insets top="25.0" />
+                </padding>
             </HBox>
-         <padding>
-            <Insets left="20.0" top="2.0" />
-         </padding>
+            <padding>
+                <Insets left="20.0" top="2.0" />
+            </padding>
         </VBox>
 
-        <Label fx:id="balanceLabel" alignment="TOP_LEFT" layoutX="415.0" layoutY="70.0" prefHeight="304.0" prefWidth="170.0" style=" -fx-text-fill: white;" wrapText="true">
-         <HBox.margin>
-            <Insets left="50.0" />
-         </HBox.margin>
-         <padding>
-            <Insets left="50.0" />
-         </padding></Label>
+        <Label fx:id="balanceLabelBitmex" alignment="TOP_LEFT" layoutX="415.0" layoutY="70.0" prefHeight="304.0" prefWidth="170.0" style=" -fx-text-fill: white;" wrapText="true">
+            <HBox.margin>
+                <Insets left="50.0" />
+            </HBox.margin>
+            <padding>
+                <Insets left="50.0" />
+            </padding>
+        </Label>
         <Button layoutX="566.0" layoutY="65.0" onAction="#refresh" prefHeight="18.0" prefWidth="18.0" style="-fx-background-color: transparent">
             <graphic>
                 <ImageView fitHeight="18.0" fitWidth="17.0" layoutX="567.0" layoutY="69.0" pickOnBounds="true" preserveRatio="true">
@@ -72,5 +76,7 @@
 
 
     </HBox>
-
+   <padding>
+      <Insets left="10.0" top="20.0" />
+   </padding>
 </VBox>

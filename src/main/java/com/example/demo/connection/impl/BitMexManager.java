@@ -4,16 +4,18 @@ import com.example.demo.Entities.UserApi;
 import com.example.demo.bitmex.BitMexAccInfoRequest;
 import com.example.demo.bitmex.BitMexResponse;
 import com.example.demo.connection.api.CryptoManager;
-import com.example.demo.services.ApiService;
+import com.example.demo.services.BitmexApiService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+@Component
 public class BitMexManager implements CryptoManager {
-    private final ApiService service;
-    public BitMexManager(ApiService service){
-        this.service = service;
+    @Autowired
+    private BitmexApiService service;
+    public BitMexManager( ){
     }
 
     @Override

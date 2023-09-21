@@ -1,5 +1,7 @@
 package com.example.demo.Entities;
 
+import org.springframework.stereotype.Component;
+
 public class UserApi {
 
     private Long id;
@@ -10,10 +12,12 @@ public class UserApi {
 
     private User user;
 
-    public UserApi() { }
+    public UserApi() {
+        id = 1L;
+    }
 
     public UserApi(String key, String secretKey, User user) {
-        this.id = id;
+        this.id = 1L;
         this.key = key;
         this.secretKey = secretKey;
         this.user = user;

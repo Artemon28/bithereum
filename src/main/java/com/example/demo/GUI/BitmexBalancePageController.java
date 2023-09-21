@@ -1,46 +1,37 @@
 package com.example.demo.GUI;
 
 import com.example.demo.DemoApplication;
+import com.example.demo.connection.impl.BitMexManager;
+import com.example.demo.services.BitmexApiService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-public class PrimaryController {
+@Component
+public class BitmexBalancePageController {
+
+    @Autowired
+    BitmexApiService service;
+
+    @Autowired
+    BitMexManager manager;
+
+    public Label balanceLabelBitmex;
     @FXML
-    public void addNewUser(ActionEvent event){
-
-    }
-
-    @FXML
-    TextField username;
-
-    @FXML
-    VBox binBalance;
-
-    @FXML
-    public void exitBinUser(ActionEvent event) throws Exception {
-        DemoApplication.deleteUser(1);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/binLogin.fxml"));
-        Pane registerPane = loader.load();
-        binBalance.getChildren().clear();
-        binBalance.getChildren().add(registerPane);
-    }
-
-
-    @FXML
-    ChoiceBox<String> buyWhat;
+    ChoiceBox<String> buyWhatBitmex;
 
     @FXML
     ChoiceBox<String> orderType;
@@ -50,24 +41,40 @@ public class PrimaryController {
 
     private final String[] types = {"BUY", "SELL"};
 
+    public VBox bitmexBalance;
+    @Autowired
+    BitmexPageController pageController;
+
+    @FXML
+    public void logoutBitmex(ActionEvent event) throws Exception {
+        service.deleteApi(1);
+        pageController.switchToLogin();
+    }
+
+
     @FXML
     public void initialize(){
         orderType.getItems().addAll(types);
         ArrayList<String> curs = new ArrayList<>();
+
+        StringBuilder balance = new StringBuilder("Your top currencies is\n");
+        Label lblData = (Label) balanceLabelBitmex.lookup("#balanceLabelBitmex");
         try {
-            curs = DemoApplication.getExchangeInfo( DemoApplication.managerType.BINANCE );
+            Map<String, String> currencies = manager.getSpotInfo(1);
+            for (Map.Entry<String, String> entry : currencies.entrySet()) {
+                balance.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+            }
         } catch (Exception e) {
-            Alert a = new Alert(Alert.AlertType.WARNING);
-            a.setContentText(e.getMessage());
-            a.show();
+            lblData.setText("Error to connect and get balance");
+            return;
         }
-        buyWhat.getItems().addAll(curs);
+        lblData.setText(lblData.getText() + balance);
     }
 
     @FXML
     public void makeOrder(){
         try {
-            DemoApplication.makeOrder(buyWhat.getValue(), orderType.getValue(), amount.getText(), DemoApplication.managerType.BINANCE );
+
         } catch (Exception e) {
             Alert a = new Alert(Alert.AlertType.WARNING);
             a.setContentText(e.getMessage());
@@ -77,7 +84,7 @@ public class PrimaryController {
 
     @FXML
     public void getAllOrders(){
-        if (buyWhat.getValue() == null){
+        if (buyWhatBitmex.getValue() == null){
             Alert a = new Alert(Alert.AlertType.WARNING);
             a.setContentText("Choose your trade pair");
             a.show();
@@ -90,7 +97,7 @@ public class PrimaryController {
         orders.setMaxWidth(580);
         orders.setWrapText(true);
         try {
-            orders.setText(DemoApplication.getAllOrders(buyWhat.getValue(), DemoApplication.managerType.BINANCE ).toString());
+
         } catch (Exception e) {
             Alert a = new Alert(Alert.AlertType.WARNING);
             a.setContentText(e.getMessage());
@@ -112,9 +119,9 @@ public class PrimaryController {
     @FXML
     public void refresh(){
         StringBuilder balance = new StringBuilder("Your top currencies is\n");
-        Label lblData = (Label) binBalance.lookup("#balanceLabel");
+        Label lblData = (Label) balanceLabelBitmex.lookup("#balanceLabelBitmex");
         try {
-            Map<String, String> currencies = DemoApplication.getBalance(1, DemoApplication.managerType.BINANCE );
+            Map<String, String> currencies = manager.getSpotInfo(1);
             for (Map.Entry<String, String> entry : currencies.entrySet()) {
                 balance.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
             }
