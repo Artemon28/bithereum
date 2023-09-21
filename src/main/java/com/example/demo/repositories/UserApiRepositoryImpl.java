@@ -73,8 +73,8 @@ public class UserApiRepositoryImpl implements  UserApiRepository{
         String url = getConnectionString(fileName);
         try (Connection conn = DriverManager.getConnection(url); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            String encryptedBinanceKey = dataEncrypter.encryptData(user.getBinanceKey());
-            String encryptedBinanceSecretKey = dataEncrypter.encryptData(user.getBinanceSecretKey());
+            String encryptedBinanceKey = dataEncrypter.encryptData(user.getKey());
+            String encryptedBinanceSecretKey = dataEncrypter.encryptData(user.getSecretKey());
 
             pstmt.setLong(1, user.getId());
             pstmt.setString(2, encryptedBinanceKey);

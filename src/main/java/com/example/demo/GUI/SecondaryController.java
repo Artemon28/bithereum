@@ -26,6 +26,8 @@ public class SecondaryController {
     @FXML
     TextField binKeyId;
     @FXML
+    TextField bitMexKeyId;
+    @FXML
     private Button close_button;
     @FXML
     private Button collapse_button;
@@ -35,6 +37,8 @@ public class SecondaryController {
     private VBox main_window;
     @FXML
     TextField secretBinKeyId;
+    @FXML
+    TextField bitMexSecretKeyId;
 
     @FXML
     VBox authPane;
@@ -46,7 +50,7 @@ public class SecondaryController {
     public void login(ActionEvent event) throws Exception {
         String key = binKeyId.getText();
         String secretKey = secretBinKeyId.getText();
-        if (DemoApplication.isExist(key, secretKey)){
+        if (DemoApplication.isExist(key, secretKey, DemoApplication.managerType.BINANCE)){
             DemoApplication.addUser(key, secretKey);
         } else {
             Alert a = new Alert(Alert.AlertType.NONE);
@@ -61,6 +65,28 @@ public class SecondaryController {
     }
 
     @FXML
+    public void bitMexLogin(ActionEvent event) throws Exception {
+        String key = bitMexKeyId.getText();
+        String secretKey = bitMexSecretKeyId.getText();
+        if (DemoApplication.isExist(key, secretKey, DemoApplication.managerType.BITMEX ) ){
+            System.out.println( "BitMEX account exist");
+            DemoApplication.addUser(key, secretKey);
+        } else {
+            System.out.println( "BitMEX account doesn't exist");
+            Alert a = new Alert(Alert.AlertType.NONE);
+            a.setAlertType(Alert.AlertType.ERROR);
+            a.setContentText("No such user at BitMEX!");
+            a.show();
+            bitMexKeyId.clear();
+            bitMexSecretKeyId.clear();
+            return;
+        }
+        switchAccount(1);
+    }
+
+
+
+    @FXML
     public void switchAccount(int id) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/balance.fxml"));
         Pane registerPane = (Pane) loader.load();
@@ -69,7 +95,7 @@ public class SecondaryController {
         StringBuilder balance = new StringBuilder("Your top currencies is\n");
         Label lblData = (Label) authPane.lookup("#balanceLabel");
         try {
-            Map<String, String> currencies = DemoApplication.getBalance(id);
+            Map<String, String> currencies = DemoApplication.getBalance(id, DemoApplication.managerType.BINANCE );
             for (Map.Entry<String, String> entry : currencies.entrySet()) {
                 balance.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
             }
@@ -79,6 +105,27 @@ public class SecondaryController {
         }
         lblData.setText(lblData.getText() + balance);
     }
+
+    @FXML
+    public void bitMexSwitchAccount(int id) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/balance.fxml"));
+        Pane registerPane = (Pane) loader.load();
+        authPane.getChildren().clear();
+        authPane.getChildren().add(registerPane);
+        StringBuilder balance = new StringBuilder("Your top currencies is\n");
+        Label lblData = (Label) authPane.lookup("#balanceLabel");
+        try {
+            Map<String, String> currencies = DemoApplication.getBalance(id, DemoApplication.managerType.BITMEX );
+            for (Map.Entry<String, String> entry : currencies.entrySet()) {
+                balance.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+            }
+        } catch (Exception e) {
+            lblData.setText("Error to connect and get balance");
+            return;
+        }
+        lblData.setText(lblData.getText() + balance);
+    }
+
 
     @FXML
     private void initialize() throws IOException {
@@ -93,7 +140,7 @@ public class SecondaryController {
     public boolean initStart() throws Exception {
         UserApi user = DemoApplication.getUser(1);
         if (user != null) {
-            if (DemoApplication.isExist(user.getBinanceKey(), user.getBinanceSecretKey())) {
+            if (DemoApplication.isExist(user.getKey(), user.getSecretKey(), DemoApplication.managerType.BINANCE ) ) {
                 switchAccount(1);
             } else {
                 Alert a = new Alert(Alert.AlertType.NONE);

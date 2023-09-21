@@ -55,7 +55,7 @@ public class PrimaryController {
         orderType.getItems().addAll(types);
         ArrayList<String> curs = new ArrayList<>();
         try {
-            curs = DemoApplication.getExchangeInfo();
+            curs = DemoApplication.getExchangeInfo( DemoApplication.managerType.BINANCE );
         } catch (Exception e) {
             Alert a = new Alert(Alert.AlertType.WARNING);
             a.setContentText(e.getMessage());
@@ -67,7 +67,7 @@ public class PrimaryController {
     @FXML
     public void makeOrder(){
         try {
-            DemoApplication.makeOrder(buyWhat.getValue(), orderType.getValue(), amount.getText());
+            DemoApplication.makeOrder(buyWhat.getValue(), orderType.getValue(), amount.getText(), DemoApplication.managerType.BINANCE );
         } catch (Exception e) {
             Alert a = new Alert(Alert.AlertType.WARNING);
             a.setContentText(e.getMessage());
@@ -90,7 +90,7 @@ public class PrimaryController {
         orders.setMaxWidth(580);
         orders.setWrapText(true);
         try {
-            orders.setText(DemoApplication.getAllOrders(buyWhat.getValue()).toString());
+            orders.setText(DemoApplication.getAllOrders(buyWhat.getValue(), DemoApplication.managerType.BINANCE ).toString());
         } catch (Exception e) {
             Alert a = new Alert(Alert.AlertType.WARNING);
             a.setContentText(e.getMessage());
@@ -114,7 +114,7 @@ public class PrimaryController {
         StringBuilder balance = new StringBuilder("Your top currencies is\n");
         Label lblData = (Label) binBalance.lookup("#balanceLabel");
         try {
-            Map<String, String> currencies = DemoApplication.getBalance(1);
+            Map<String, String> currencies = DemoApplication.getBalance(1, DemoApplication.managerType.BINANCE );
             for (Map.Entry<String, String> entry : currencies.entrySet()) {
                 balance.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
             }

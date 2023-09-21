@@ -20,7 +20,7 @@ public class BinanceManager implements CryptoManager {
         UserApi api = service.findApiByUserId(id);
         if (api != null) {
             BinanceAccInfoRequest request = new BinanceAccInfoRequest(
-                    api.getBinanceSecretKey(), api.getBinanceKey());
+                    api.getSecretKey(), api.getKey());
             BinanceResponse response = request.send();
             return response.getAllBalances();
         }
@@ -32,7 +32,7 @@ public class BinanceManager implements CryptoManager {
         UserApi api = service.findApiByUserId(id);
         if (api != null) {
             BinanceSnapshotAccountRequest request = new BinanceSnapshotAccountRequest(
-                    api.getBinanceSecretKey(), api.getBinanceKey());
+                    api.getSecretKey(), api.getKey());
             BinanceResponse response = request.sendMargin();
             return response.getJsonString();
         }

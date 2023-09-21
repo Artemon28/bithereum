@@ -5,6 +5,7 @@ import com.example.demo.Entities.UserApi;
 import com.example.demo.GUI.SecondaryController;
 import com.example.demo.GUI.loadController;
 import com.example.demo.connection.impl.BinanceManager;
+import com.example.demo.connection.impl.BitMexManager;
 import com.example.demo.repositories.UserApiRepository;
 import com.example.demo.repositories.UserApiRepositoryImpl;
 import com.example.demo.repositories.UserInfoRepositoryImpl;
@@ -27,13 +28,17 @@ import java.util.List;
 import java.util.Map;
 
 public class DemoApplication extends Application {
-
+    public static enum managerType {
+        BINANCE,
+        BITMEX;
+    }
 
     private UserService service;
 
     private static ApiService apiService;
 
     private static BinanceManager manager;
+    private static BitMexManager bitMexManager;
 
     public static void main(String[] args) throws Exception {
         UserInfoRepositoryImpl dbInfo = new UserInfoRepositoryImpl("test.db");
@@ -42,41 +47,90 @@ public class DemoApplication extends Application {
         dbApi.createNewDatabase();
         apiService = new ApiService(dbApi);
         manager = new BinanceManager(apiService);
+        bitMexManager = new BitMexManager( apiService );
 //        makeOrder();
 //        getAllOrders();
         Application.launch(args);
     }
 
-    public static Map<String, String> getBalance(int id) throws Exception {
-        return manager.getSpotInfo(id);
+    public static Map<String, String> getBalance(int id, managerType type) throws Exception {
+        switch ( type ) {
+            case BINANCE: {
+                return manager.getSpotInfo( id );
+            }
+            case BITMEX: {
+                return bitMexManager.getSpotInfo( id );
+            }
+            default:
+                throw new Exception("new managerType");
+        }
     }
 
     public static UserApi getUser(int id) throws Exception {
         return apiService.findApiByUserId(id);
     }
 
-    public static boolean isExist(String key, String secretKey) throws Exception {
-        return manager.isUserExist(key, secretKey);
+    public static boolean isExist(String key, String secretKey, managerType type ) throws Exception {
+        switch ( type ) {
+            case BINANCE: {
+                System.out.println( "BINANCE");
+                return manager.isUserExist(key, secretKey);
+            }
+            case BITMEX: {
+                System.out.println("BITMEX");
+                return bitMexManager.isUserExist(key, secretKey);
+            }
+            default:
+                throw new Exception("new managerType");
+        }
     }
 
-    public static ArrayList<String> getExchangeInfo() throws Exception {
+    public static ArrayList<String> getExchangeInfo( managerType type ) throws Exception {
 //        System.out.println(manager.getExchangeInfo());
-        return manager.getExchangeInfo();
+        switch ( type ) {
+            case BINANCE: {
+                return manager.getExchangeInfo();
+            }
+            case BITMEX: {
+                return bitMexManager.getExchangeInfo();
+            }
+            default:
+                throw new Exception("new managerType");
+        }
     }
 
-    public static List<String> getAllOrders(String symbol) throws Exception{
+    public static List<String> getAllOrders(String symbol, managerType type ) throws Exception{
         UserApi user = apiService.findApiByUserId(1);
-        String key = user.getBinanceKey();
-        String secretKey = user.getBinanceSecretKey();
-        return manager.allOrders(key, secretKey, symbol);
+        String key = user.getKey();
+        String secretKey = user.getSecretKey();
+        switch ( type ) {
+            case BINANCE: {
+                return manager.allOrders( key, secretKey, symbol );
+            }
+            case BITMEX: {
+                return bitMexManager.allOrders( key, secretKey, symbol );
+            }
+            default:
+                throw new Exception("new managerType");
+        }
     }
 
-    public static void makeOrder(String symbol, String orderType, String qty) throws Exception{
+    public static void makeOrder(String symbol, String orderType, String qty, managerType type ) throws Exception{
         UserApi user = apiService.findApiByUserId(1);
-        String key = user.getBinanceKey();
-        String secretKey = user.getBinanceSecretKey();
-        manager.makeOrder(key, secretKey, symbol, orderType, "MARKET", qty);
+        String key = user.getKey();
+        String secretKey = user.getSecretKey();
+        switch ( type ) {
+            case BINANCE: {
+                manager.makeOrder(key, secretKey, symbol, orderType, "MARKET", qty);
+                break;
+            }
+            case BITMEX: {
+                bitMexManager.makeOrder(key, secretKey, symbol, orderType, "MARKET", qty);
+                break;
+            }
+        }
     }
+
 
     public static void addUser(String key, String secretKey){
         apiService.addApi(new UserApi(1L, key, secretKey, new User()));
